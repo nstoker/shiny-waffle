@@ -33,9 +33,8 @@ namespace shiney_waffle
                   else
                     return n*fact(n-1)
                   end
-                end
+                end";
 
-                return fact(mynumber)";
             return script;
         }
 
@@ -44,8 +43,9 @@ namespace shiney_waffle
             string scriptCode = MoonSharpFactorialSource();
 
             luaScript = new Script();
-            luaScript.Globals["mynumber"] = 7;
-            DynValue res = luaScript.DoString(scriptCode);
+
+            luaScript.DoString(MoonSharpFactorialSource());
+            DynValue res = luaScript.Call(luaScript.Globals["fact"], 4);
             return res.Number;
         }
         private void InitialiseMoonsharp()
