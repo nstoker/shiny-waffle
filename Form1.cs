@@ -23,6 +23,11 @@ namespace shiney_waffle
             InitialiseMoonsharp();
         }
 
+        private static int Mul(int a, int b)
+        {
+            return a * b;
+        }
+
         private string MoonSharpFactorialSource()
         {
             string script = @"
@@ -38,13 +43,15 @@ namespace shiney_waffle
             return script;
         }
 
-        private double MoonSharpFactorial()
+        private double CallbackTest()
         {
             string scriptCode = MoonSharpFactorialSource();
 
             luaScript = new Script();
 
             luaScript.DoString(MoonSharpFactorialSource());
+
+            luaScript.Globals["Mul"] = (Func<int,int,int>)Mul;
             DynValue res = luaScript.Call(luaScript.Globals["fact"], 4);
             return res.Number;
         }
@@ -69,7 +76,7 @@ namespace shiney_waffle
         private void button1_Click(object sender, EventArgs e)
         {
             //DynValue res = luaScript.Globals.Get(luaScript.Globals["getStates"]);
-            label1.Text = "Result of function is " + MoonSharpFactorial().ToString();
+            label1.Text = "Result of function is " + CallbackTest().ToString();
         }
     }
 }
