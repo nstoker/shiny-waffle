@@ -22,21 +22,32 @@ namespace shiney_waffle
             InitializeComponent();
         }
 
-        static double Sum(Table t)
+        double CallMyClass1()
         {
-            var nums = from v in t.Values
-                       where v.Type == DataType.Number
-                       select v.Number;
+            string scriptCode = @"return obj.calcHyponenuse(3, 4)";
 
-            return nums.Sum();
-        }
-        private static double TableTestReverseWithTable()
-        {
-            string scriptCode = @"return dosum{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}";
+            UserData.RegisterAssembly();
 
             script = new Script();
 
-            script.Globals["dosum"] = (Func<Table, double>)Sum;
+            script.Globals["obj"] = new myClass();
+
+            DynValue res = script.DoString(scriptCode);
+
+            return res.Number;
+        }
+
+        double CallMyClass2()
+        {
+            string scriptCode = @"return obj.calcHyponenuse(3, 4)";
+
+            UserData.RegisterType<myClass>();
+
+            script = new Script();
+
+            DynValue obj = UserData.Create(new myClass());
+
+            script.Globals.Set("obj", obj);
 
             DynValue res = script.DoString(scriptCode);
 
@@ -47,7 +58,16 @@ namespace shiney_waffle
         {
             //DynValue res = luaScript.Globals.Get(luaScript.Globals["getStates"]);
             //label1.Text = "Result of function is " + EnumerableTest().ToString();
-            label1.Text = "Result of returning a table is " + TableTestReverseWithTable().ToString();
+            label1.Text = "hypotenuse is " + CallMyClass2().ToString();
+        }
+    }
+
+    [MoonSharpUserData]
+    class myClass
+    {
+        public double calcHyponenuse(double a, double b)
+        {
+            return Math.Sqrt(a * a + b * b);
         }
     }
 }
