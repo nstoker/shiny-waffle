@@ -1,0 +1,3 @@
+[submodule "lua-state-machine"]
+	path = lua-state-machine
+	url = git@github.com:neil-sgp/lua-state-machine.git
