@@ -23,7 +23,7 @@ namespace shiney_waffle
             InitialiseMoonsharp();
         }
 
-        private string MoonSharpFactorial()
+        private string MoonSharpFactorialSource()
         {
             string script = @"
                 -- defines a factorial function
@@ -39,6 +39,14 @@ namespace shiney_waffle
             return script;
         }
 
+        private double MoonSharpFactorial()
+        {
+            string scriptCode = MoonSharpFactorialSource();
+
+            luaScript = new Script();
+            DynValue res = luaScript.DoString(scriptCode);
+            return res.Number;
+        }
         private void InitialiseMoonsharp()
         {
             //// Sets up the moonsharp environment
@@ -60,8 +68,7 @@ namespace shiney_waffle
         private void button1_Click(object sender, EventArgs e)
         {
             //DynValue res = luaScript.Globals.Get(luaScript.Globals["getStates"]);
-            DynValue res = Script.RunString(MoonSharpFactorial());
-            label1.Text = "Result of function is " + res.ToString();
+            label1.Text = "Result of function is " + MoonSharpFactorial().ToString();
         }
     }
 }
