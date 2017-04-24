@@ -28,7 +28,7 @@ namespace shiney_waffle
 
             script = new Script();
 
-            script.Globals["dosum"] = (Func<List<int>, int>)(l => l.Sum());
+            script.Globals["dosum"] = (Func<List<int>, int>)(l => l.OfType<int>().Sum());
 
             DynValue res = script.DoString(scriptCode);
 
