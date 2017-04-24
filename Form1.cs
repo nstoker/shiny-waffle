@@ -27,7 +27,7 @@ namespace shiney_waffle
         {
             //DynValue res = luaScript.Globals.Get(luaScript.Globals["getStates"]);
             //label1.Text = "Result of function is " + EnumerableTest().ToString();
-            label1.Text = "hypotenuse is " + MyClassStaticThroughInstance().ToString();
+            label1.Text = "hypotenuse is " + MyClassStaticThroughPlaceholder().ToString();
         }
 
         double CallMyClass1()
@@ -77,6 +77,23 @@ namespace shiney_waffle
             return res.Number;
         }
 
+        double MyClassStaticThroughPlaceholder()
+        {
+            string scriptCode = @"    
+		return obj.calcHypotenuse(3, 4);
+	";
+
+            // Automatically register all MoonSharpUserData types
+            UserData.RegisterAssembly();
+
+            script = new Script();
+
+            script.Globals["obj"] = typeof(MyClassStatic);
+
+            DynValue res = script.DoString(scriptCode);
+
+            return res.Number;
+        }
     }
 
     [MoonSharpUserData]
@@ -91,7 +108,7 @@ namespace shiney_waffle
     [MoonSharpUserData]
     class MyClassStatic
     {
-        public static double calcHyponenuse(double a, double b)
+        public static double calcHypotenuse(double a, double b)
         {
             return Math.Sqrt(a * a + b * b);
         }
