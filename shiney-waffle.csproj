@@ -84,6 +84,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Scripts\client_sm.lua" />
+    <EmbeddedResource Include="Scripts\smwrapper.lua" />
+    <EmbeddedResource Include="Scripts\statemachine.lua" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
