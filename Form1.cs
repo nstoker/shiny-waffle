@@ -22,6 +22,14 @@ namespace shiney_waffle
             InitializeComponent();
         }
 
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //DynValue res = luaScript.Globals.Get(luaScript.Globals["getStates"]);
+            //label1.Text = "Result of function is " + EnumerableTest().ToString();
+            label1.Text = "hypotenuse is " + MyClassStaticThroughInstance().ToString();
+        }
+
         double CallMyClass1()
         {
             string scriptCode = @"return obj.calcHyponenuse(3, 4)";
@@ -69,12 +77,6 @@ namespace shiney_waffle
             return res.Number;
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //DynValue res = luaScript.Globals.Get(luaScript.Globals["getStates"]);
-            //label1.Text = "Result of function is " + EnumerableTest().ToString();
-            label1.Text = "hypotenuse is " + MyClassStaticThroughInstance().ToString();
-        }
     }
 
     [MoonSharpUserData]
