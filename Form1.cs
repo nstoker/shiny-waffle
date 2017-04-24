@@ -30,7 +30,7 @@ namespace shiney_waffle
 
             script = new Script();
 
-            script.Globals["obj"] = new myClass();
+            script.Globals["obj"] = new MyClass();
 
             DynValue res = script.DoString(scriptCode);
 
@@ -41,13 +41,28 @@ namespace shiney_waffle
         {
             string scriptCode = @"return obj.calcHyponenuse(3, 4)";
 
-            UserData.RegisterType<myClass>();
+            UserData.RegisterType<MyClass>();
 
             script = new Script();
 
-            DynValue obj = UserData.Create(new myClass());
+            DynValue obj = UserData.Create(new MyClass());
 
             script.Globals.Set("obj", obj);
+
+            DynValue res = script.DoString(scriptCode);
+
+            return res.Number;
+        }
+
+        double MyClassStaticThroughInstance()
+        {
+            string scriptCode = @"return obj.calcHyponenuse(3, 4)";
+
+            UserData.RegisterAssembly();
+
+            script = new Script();
+
+            script.Globals["obj"] = new MyClassStatic();
 
             DynValue res = script.DoString(scriptCode);
 
@@ -58,14 +73,23 @@ namespace shiney_waffle
         {
             //DynValue res = luaScript.Globals.Get(luaScript.Globals["getStates"]);
             //label1.Text = "Result of function is " + EnumerableTest().ToString();
-            label1.Text = "hypotenuse is " + CallMyClass2().ToString();
+            label1.Text = "hypotenuse is " + MyClassStaticThroughInstance().ToString();
         }
     }
 
     [MoonSharpUserData]
-    class myClass
+    class MyClass
     {
         public double calcHyponenuse(double a, double b)
+        {
+            return Math.Sqrt(a * a + b * b);
+        }
+    }
+
+    [MoonSharpUserData]
+    class MyClassStatic
+    {
+        public static double calcHyponenuse(double a, double b)
         {
             return Math.Sqrt(a * a + b * b);
         }
