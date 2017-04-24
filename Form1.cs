@@ -35,7 +35,7 @@ namespace shiney_waffle
                   end
                 end
 
-                return fact(5)";
+                return fact(mynumber)";
             return script;
         }
 
@@ -44,6 +44,7 @@ namespace shiney_waffle
             string scriptCode = MoonSharpFactorialSource();
 
             luaScript = new Script();
+            luaScript.Globals["mynumber"] = 7;
             DynValue res = luaScript.DoString(scriptCode);
             return res.Number;
         }
