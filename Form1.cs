@@ -102,10 +102,44 @@ namespace shiney_waffle
             //}
         }
 
+        private static List<int> GetNumberList()
+        {
+            List<int> lst = new List<int>();
+
+            for (int i = 1; i <= 10; i++)
+                lst.Add(i);
+
+            return lst;
+        }
+
+        private static double TableTest1()
+        {
+            string scriptCode = @"
+                total = 0
+
+                tbl = getNumbers()
+
+                for _, i in ipairs(tbl) do 
+                    total = total + i
+                end
+
+                return total
+            ";
+
+            script = new Script();
+
+            script.Globals["getNumbers"] = (Func<List<int>>)GetNumberList;
+
+            DynValue res = script.DoString(scriptCode);
+
+            return res.Number;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             //DynValue res = luaScript.Globals.Get(luaScript.Globals["getStates"]);
-            label1.Text = "Result of function is " + EnumerableTest().ToString();
+            //label1.Text = "Result of function is " + EnumerableTest().ToString();
+            label1.Text = "Result of returning a table is " + TableTest1().ToString();
         }
     }
 }
