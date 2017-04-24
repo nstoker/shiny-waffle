@@ -22,34 +22,13 @@ namespace shiney_waffle
             InitializeComponent();
         }
 
-
-        private static Table GetNumberTable(Script script)
+        private static double TableTestReverse()
         {
-            Table tbl = new Table(script);
-
-            for (int i = 1; i <= 10; i++)
-                tbl[i] = i;
-
-            return tbl;
-        }
-
-        private static double TableTest2()
-        {
-            string scriptCode = @"
-                total = 0
-
-                tbl = getNumbers()
-
-                for _, i in ipairs(tbl) do 
-                    total = total + i
-                end
-
-                return total
-            ";
+            string scriptCode = @"return dosum{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}";
 
             script = new Script();
 
-            script.Globals["getNumbers"] = (Func<Script, Table>)GetNumberTable;
+            script.Globals["dosum"] = (Func<List<int>, int>)(l => l.Sum());
 
             DynValue res = script.DoString(scriptCode);
 
@@ -60,7 +39,7 @@ namespace shiney_waffle
         {
             //DynValue res = luaScript.Globals.Get(luaScript.Globals["getStates"]);
             //label1.Text = "Result of function is " + EnumerableTest().ToString();
-            label1.Text = "Result of returning a table is " + TableTest2().ToString();
+            label1.Text = "Result of returning a table is " + TableTestReverse().ToString();
         }
     }
 }
