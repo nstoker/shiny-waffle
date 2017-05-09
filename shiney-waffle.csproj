@@ -62,6 +62,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RichTextBoxWithLineNumbers.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RichTextBoxWithLineNumbers.Designer.cs">
+      <DependentUpon>RichTextBoxWithLineNumbers.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -73,7 +79,11 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="RichTextBoxWithLineNumbers.resx">
+      <DependentUpon>RichTextBoxWithLineNumbers.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
