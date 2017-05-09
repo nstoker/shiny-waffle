@@ -1,7 +1,7 @@
 --- Statemachine definition
 --  For testing the statemachine callbacks
 
-local machine = require('lua-state-machine/statemachine')﻿
+local client_sm = require('lua-state-machine/statemachine')﻿
 
 function sm_config ()
   {
@@ -17,3 +17,5 @@ function sm_config ()
 
     return fsm
 }
+
+return client_sm;
