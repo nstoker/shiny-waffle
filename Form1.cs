@@ -1,4 +1,5 @@
 ﻿using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Loaders;
 using System;
 using System.IO;
 using System.Reflection;
@@ -6,6 +7,7 @@ using System.Windows.Forms;
 
 namespace shiney_waffle
 {
+
     /// <summary>
     /// This is a form to test the LUA script handling.
     /// </summary>
@@ -19,8 +21,8 @@ namespace shiney_waffle
         /// </summary>
         public Form1()
         {
-            script = new Script();
-
+            InitialiseLUAScripting();
+            
             InitializeComponent();
 
             createNewScript();
@@ -95,8 +97,27 @@ namespace shiney_waffle
         /// <param name="e"></param>
         private void testScript_Click(object sender, EventArgs e)
         {
-            script.LoadString(richTextBoxWithLineNumbers1.Text);
-            throw new NotImplementedException();
+            Console.WriteLine("Test run started");
+            try
+            {
+                script.DoString(richTextBoxWithLineNumbers1.Text);
+
+            }
+            catch (ScriptRuntimeException ex)
+            {
+                Console.WriteLine($"RUNTIME Exception {ex.DecoratedMessage}");
+                Application.Exit();
+            }
+            catch (SyntaxErrorException ex)
+            {
+                Console.WriteLine($"Script Syntax Error Exception {ex.DecoratedMessage}");
+                Application.Exit();
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine($"Script Syntax Error Exception {ex.Message}\n{ex.StackTrace}");
+                Application.Exit();
+            }
         }
         #endregion
 
@@ -118,5 +139,74 @@ namespace shiney_waffle
                 richTextBoxWithLineNumbers1.Text = reader.ReadToEnd();
             }
         }
+
+        #region LUA_ScriptHandling
+
+        public bool FSM_Fail(string message)
+        {
+            Console.WriteLine($"FAM_Fail said '{message}'");
+            Console.Write($"FSM_Fail state entered message '{message}'");
+            return true;
+        }
+
+        /// <summary>
+        /// This is called by the state machine as a callback when a student has failed the module.
+        /// </summary>
+        /// \note The state machine will automatically move to the shutdown state
+        public bool FSM_Pass(string message)
+        {
+            Console.Write($"FSM_Pass said '{message}'");
+            Console.Write($"FSM_Pass state entered '{message}'");
+            return true;
+        }
+
+        /// <summary>
+        /// This is called by the state machine as a callback when shutting down.
+        /// </summary>
+        public bool FSM_Shutdown()
+        {
+            Console.Write("FSM_Shutdown state entered");
+
+            Console.Write("And done...");
+            return true;
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void InitialiseLUAScripting()
+        {
+            try
+            {
+                script = new Script();
+                script.Options.DebugPrint = s => { Console.WriteLine($"DEBUG LUA Script said '{s}'"); };
+                script.Options.ScriptLoader = new EmbeddedResourcesScriptLoader();
+                ((ScriptLoaderBase)script.Options.ScriptLoader).ModulePaths = ScriptLoaderBase.UnpackStringPaths("Scripts/?;Scripts/?.lua");
+                script.Globals["FSM_Fail"] = (Func<string, bool>)FSM_Fail;
+                script.Globals["FSM_Pass"] = (Func<string, bool>)FSM_Pass;
+                script.Globals["FSM_Shutdown"] = (Func<bool>)FSM_Shutdown;
+
+            }
+            catch (ScriptRuntimeException ex)
+            {
+                Console.WriteLine($"RUNTIME Exception {ex.DecoratedMessage}");
+                Application.Exit();
+            }
+            catch (SyntaxErrorException ex)
+            {
+                Console.WriteLine($"Script Syntax Error Exception {ex.DecoratedMessage}");
+                Application.Exit();
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine($"Script Syntax Error Exception {ex.Message}\n{ex.StackTrace}");
+                Application.Exit();
+            }
+        }
+
+
+        #endregion
     }
 }
