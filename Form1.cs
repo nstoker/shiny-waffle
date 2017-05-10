@@ -21,8 +21,6 @@ namespace shiney_waffle
         /// </summary>
         public Form1()
         {
-            InitialiseLUAScripting();
-            
             InitializeComponent();
 
             createNewScript();
@@ -98,6 +96,8 @@ namespace shiney_waffle
         private void testScript_Click(object sender, EventArgs e)
         {
             Console.WriteLine("Test run started");
+            InitialiseLUAScripting();
+
             try
             {
                 script.DoString(richTextBoxWithLineNumbers1.Text);
@@ -178,6 +178,7 @@ namespace shiney_waffle
         /// </summary>
         private void InitialiseLUAScripting()
         {
+            Console.WriteLine("InitialiseLUAScripting()");
             try
             {
                 script = new Script();
@@ -204,6 +205,8 @@ namespace shiney_waffle
                 Console.WriteLine($"Script Syntax Error Exception {ex.Message}\n{ex.StackTrace}");
                 Application.Exit();
             }
+
+            Console.WriteLine("InitialiseLUAScripting exiting");
         }
 
 
