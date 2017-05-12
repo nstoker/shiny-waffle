@@ -16,7 +16,21 @@ namespace shiney_waffle
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            foreach(string resourceName in System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames())
+            {
+                Console.WriteLine($"Resource: {resourceName}");
+            }
+            try
+            {
+                Application.Run(new Form1());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception {ex}");
+                throw;
+            }
+            
         }
     }
 }

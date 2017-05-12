@@ -1,14 +1,23 @@
---- Testscript wrapper for running the state machine
--- To reproduce the calls made from the main system
+local smwrapper = {}
+local fileName="smwrapper.lua"
 
---require 'Scripts/client_sm.lua'
+local simulatorVariables={}
 
---sm = client_sm:sm_config()
---sm:todot('sm.dot')
+function stateChangeNotification(event, from, to)
+	print("smwrapper: State change on " .. event .. " from " .. from .. " to " .. to)
+end
 
-function getStates()
-  {
-    return "oops" --sm.events;
-}
+function initialise()
+	print("smwrapper: initialise()")
 
-return 'oops'
+	print("smwrapper: initialise end")
+end
+
+function reportName()
+	local name = fileName .. "smwrapper:reportName()"
+	return name
+end
+
+print fileName .. " loaded"
+
+return smwrapper

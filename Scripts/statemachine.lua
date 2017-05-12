@@ -1,5 +1,5 @@
-local machine = {}
-machine.__index = machine
+local statemachine = {}
+statemachine.__index = statemachine
 
 local NONE = "none"
 local ASYNC = "async"
@@ -34,7 +34,7 @@ local function create_transition(name)
       if leaveReturn ~= ASYNC then
         transition(self, ...)
       end
-      
+
       return true
     elseif self.asyncState == name .. "WaitingOnLeave" then
       self.current = to
@@ -46,7 +46,7 @@ local function create_transition(name)
       if enterReturn ~= ASYNC then
         transition(self, ...)
       end
-      
+
       return true
     elseif self.asyncState == name .. "WaitingOnEnter" then
       call_handler(self["onafter" .. name] or self["on" .. name], params)
@@ -79,11 +79,11 @@ local function add_to_map(map, event)
   end
 end
 
-function machine.create(options)
+function statemachine.create(options)
   assert(options.events)
 
   local fsm = {}
-  setmetatable(fsm, machine)
+  setmetatable(fsm, statemachine)
 
   fsm.options = options
   fsm.current = options.initial or 'none'
@@ -96,7 +96,7 @@ function machine.create(options)
     fsm.events[name] = fsm.events[name] or { map = {} }
     add_to_map(fsm.events[name].map, event)
   end
-  
+
   for name, callback in pairs(options.callbacks or {}) do
     fsm[name] = callback
   end
@@ -104,21 +104,21 @@ function machine.create(options)
   return fsm
 end
 
-function machine:is(state)
+function statemachine:is(state)
   return self.current == state
 end
 
-function machine:can(e)
+function statemachine:can(e)
   local event = self.events[e]
   local to = event and event.map[self.current] or event.map['*']
   return to ~= nil, to
 end
 
-function machine:cannot(e)
+function statemachine:cannot(e)
   return not self:can(e)
 end
 
-function machine:todot(filename)
+function statemachine:todot(filename)
   local dotfile = io.open(filename,'w')
   dotfile:write('digraph {\n')
   local transition = function(event,from,to)
@@ -137,20 +137,20 @@ function machine:todot(filename)
   dotfile:close()
 end
 
-function machine:transition(event)
+function statemachine:transition(event)
   if self.currentTransitioningEvent == event then
     return self[self.currentTransitioningEvent](self)
   end
 end
 
-function machine:cancelTransition(event)
+function statemachine:cancelTransition(event)
   if self.currentTransitioningEvent == event then
     self.asyncState = NONE
     self.currentTransitioningEvent = nil
   end
 end
 
-machine.NONE = NONE
-machine.ASYNC = ASYNC
+statemachine.NONE = NONE
+statemachine.ASYNC = ASYNC
 
-return machine
+return statemachine
